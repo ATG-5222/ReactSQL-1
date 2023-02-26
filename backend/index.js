@@ -10,6 +10,8 @@ const db = mysql.createConnection({
     database:"reactsql1",
 });
 
+app.use(express.json());
+
 app.get("/",(req,res)=>{
     res.json("hello this is the backend");
 });
@@ -19,6 +21,19 @@ app.get("/books",(req,res)=>{
     db.query(q,(err,data)=>{
         if(err) return res.json(err);
         return res.json(data);
+    })
+});
+
+app.post("/books",(req,res)=>{
+    const q = "INSERT INTO book (`title`,`description`,`cover`) VALUES (?)";
+    const values = [
+        req.body.title,
+        req.body.description,
+        req.body.cover,
+    ];
+    db.query(q,[values],(err,data)=>{
+        if(err) return res.json(err);
+        return res.json("Book has been created succesfully");
     })
 });
 
